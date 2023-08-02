@@ -1,5 +1,11 @@
 import './App.css';
 
+import { useState } from 'react';
+
+import usePasswordGenerator from './Components/usePasswordGenerator';
+
+
+
 
 //container
 //header
@@ -10,41 +16,78 @@ import './App.css';
 //generate pasword button
 function App() {
 
-  const checkboxdata = [{ Name: "UpperCase", state: false },
-  { Name: "LowerCase", state: false },
-  { Name: "UpperandNumberCase", state: false },
-  { Name: "LowerandNumberCase", state: false }];
+  const [length, setLength] = useState(4);
+  const [checkBoxData, setCheckBoxData] = useState([
+    { Name: "IncludeUpperCase", state: true },
+    { Name: "IncludeLowerCase", state: true },
+    { Name: "IncludeNumbers", state: true },
+    { Name: "IncludeSymbols", state: true }]);
 
+const [cpyBtn,setCpyBtn]=useState(true);
+
+const [strengthStatus,setStrengthStatus] = useState('');
+
+ const changecheckbox = (element) => {
+    console.log(element);
+   const updatedCheckBoxData= checkBoxData.map((e) => {
+      if (e.Name === element.Name) {
+
+  return {...e,state:!element.state}
+
+
+      }
+  
+      return e
+    });
+
+    setCheckBoxData(updatedCheckBoxData);
+  }
+  const { password, generatePassword } = usePasswordGenerator();
+
+  const copydata=()=>{
+
+    navigator.clipboard.writeText(password);
+    setCpyBtn(true);
+    setTimeout(()=>{
+      alert("password is copied to clipboard,if you want click again generate password");
+      setCpyBtn(false);
+    },1000)
+    
+  }
   return (
     <div className="Conatiner">
       <div className="Header">
-        <h2>headertext</h2>
-        <button>Copy</button>
-      </div>
+        <h2>{password}</h2>
+     <button onClick={copydata}>{cpyBtn ? "copied" : "copy"}</button> 
+           </div>
 
       <div className="CharLength">
         <h3>Character Length</h3>
-        <span>number</span>
+        <span>{length}</span>
       </div>
       <div className="CharLengthBar">
 
-        <input type="range" />
+        <input type="range" min="4" max="20" value={length} onChange={(e) => setLength(e.target.value)} />
 
       </div>
       <div className="Checkboxwithtext">
 
-        {checkboxdata.map((element, index) => {
+        {checkBoxData.map((element, index) => {
 
           return (
 
-            <div>
-              <li key={index}> <input type="checkbox" value={element.state} />{element.Name}</li>
-            </div>
+            <>
+              <li key={index}> <input type="checkbox" name={element}  onChange={() => changecheckbox(element)} />{element.Name}</li>
+            </>
           )
         })}
       </div>
+      <div className='StrengthStatus'>
+<h3>Strength</h3>
+<h3>{strengthStatus}</h3>
+      </div>
       <div className="GeneratePasswordBtn">
-        <button>Generate Password</button>
+        <button onClick={() => generatePassword(length, checkBoxData)}>Generate Password</button>
       </div>
     </div>
   );

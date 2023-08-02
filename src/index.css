@@ -20,6 +20,7 @@ button{
   border: 1px solid;
   border-radius: 10px;
   background-color: aquamarine;
+  cursor: pointer;
 }
 
 .CharLength{
@@ -44,6 +45,7 @@ button{
   grid-template-columns: 1fr 1fr;
 margin:1px;
 margin-bottom:10px;
+gap:5px;
 
 }
 
