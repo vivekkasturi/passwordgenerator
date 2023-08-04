@@ -3,6 +3,7 @@ import './App.css';
 import { useState } from 'react';
 
 import usePasswordGenerator from './Components/usePasswordGenerator';
+import StrengthStatus from './Components/StrengthStatus';
 
 
 
@@ -25,7 +26,8 @@ function App() {
 
 const [cpyBtn,setCpyBtn]=useState(true);
 
-const [strengthStatus,setStrengthStatus] = useState('');
+const [strengthValue,setStrengthValue] = useState('');
+
 
  const changecheckbox = (element) => {
     console.log(element);
@@ -44,6 +46,7 @@ const [strengthStatus,setStrengthStatus] = useState('');
   }
   const { password, generatePassword } = usePasswordGenerator();
 
+
   const copydata=()=>{
 
     navigator.clipboard.writeText(password);
@@ -53,8 +56,14 @@ const [strengthStatus,setStrengthStatus] = useState('');
       setCpyBtn(false);
     },1000)
     
+  };
+
+  const changedatalength=(e)=>{
+    setLength(e.target.value);
+   
   }
   return (
+
     <div className="Conatiner">
       <div className="Header">
         <h2>{password}</h2>
@@ -67,7 +76,7 @@ const [strengthStatus,setStrengthStatus] = useState('');
       </div>
       <div className="CharLengthBar">
 
-        <input type="range" min="4" max="20" value={length} onChange={(e) => setLength(e.target.value)} />
+        <input type="range" min="4" max="20" value={length} onChange={changedatalength} />
 
       </div>
       <div className="Checkboxwithtext">
@@ -84,12 +93,14 @@ const [strengthStatus,setStrengthStatus] = useState('');
       </div>
       <div className='StrengthStatus'>
 <h3>Strength</h3>
-<h3>{strengthStatus}</h3>
+<h3 className="StrengthStatus">{strengthValue}   <StrengthStatus length={length} strengthValue={strengthValue} setStrengthValue={setStrengthValue} /></h3>
       </div>
       <div className="GeneratePasswordBtn">
         <button onClick={() => generatePassword(length, checkBoxData)}>Generate Password</button>
       </div>
+    
     </div>
+    
   );
 }
 
