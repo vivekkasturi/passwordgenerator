@@ -24,21 +24,21 @@ function App() {
     { Name: "IncludeNumbers", state: true },
     { Name: "IncludeSymbols", state: true }]);
 
-const [cpyBtn,setCpyBtn]=useState(true);
+  const [cpyBtn, setCpyBtn] = useState(true);
 
-const [strengthValue,setStrengthValue] = useState('');
+  const [strengthValue, setStrengthValue] = useState('');
 
 
- const changecheckbox = (element) => {
+  const changecheckbox = (element) => {
     console.log(element);
-   const updatedCheckBoxData= checkBoxData.map((e) => {
+    const updatedCheckBoxData = checkBoxData.map((e) => {
       if (e.Name === element.Name) {
 
-  return {...e,state:!element.state}
+        return { ...e, state: !element.state }
 
 
       }
-  
+
       return e
     });
 
@@ -47,28 +47,32 @@ const [strengthValue,setStrengthValue] = useState('');
   const { password, generatePassword } = usePasswordGenerator();
 
 
-  const copydata=()=>{
+  const copydata = () => {
 
-    navigator.clipboard.writeText(password);
-    setCpyBtn(true);
-    setTimeout(()=>{
-      alert("password is copied to clipboard,if you want click again generate password");
-      setCpyBtn(false);
-    },1000)
-    
-  };
+    if (password) {
+      navigator.clipboard.writeText(password);
+      setTimeout(() => {
+        alert("password is copied to clipboard,if you want new password please click generate password again ");
+        setCpyBtn(false);
+        setTimeout(()=>setCpyBtn(true),3000);
+      }, 1000);
+    }else{
+      alert("Please generate password to copy text!");
+    }
 
-  const changedatalength=(e)=>{
+  }
+
+  const changedatalength = (e) => {
     setLength(e.target.value);
-   
+
   }
   return (
 
     <div className="Conatiner">
       <div className="Header">
         <h2>{password}</h2>
-     <button onClick={copydata}>{cpyBtn ? "copied" : "copy"}</button> 
-           </div>
+        <button onClick={copydata}>{cpyBtn ? "copy" : "copied"}</button>
+      </div>
 
       <div className="CharLength">
         <h3>Character Length</h3>
@@ -86,21 +90,21 @@ const [strengthValue,setStrengthValue] = useState('');
           return (
 
             <>
-              <li key={index}> <input type="checkbox" name={element}  onChange={() => changecheckbox(element)} />{element.Name}</li>
+              <li key={index}> <input type="checkbox" name={element} onChange={() => changecheckbox(element)} />{element.Name}</li>
             </>
           )
         })}
       </div>
       <div className='StrengthStatus'>
-<h3>Strength</h3>
-<h3 className="StrengthStatus">{strengthValue}   <StrengthStatus length={length} strengthValue={strengthValue} setStrengthValue={setStrengthValue} /></h3>
+        <h3>Strength</h3>
+        <h3 className="StrengthStatus">{strengthValue}   <StrengthStatus length={length} strengthValue={strengthValue} setStrengthValue={setStrengthValue} /></h3>
       </div>
       <div className="GeneratePasswordBtn">
         <button onClick={() => generatePassword(length, checkBoxData)}>Generate Password</button>
       </div>
-    
+
     </div>
-    
+
   );
 }
 
